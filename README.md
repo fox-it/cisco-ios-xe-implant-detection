@@ -21,9 +21,9 @@ We took another look at the [initial blogpost by Cisco Talos](https://blog.talos
 Based on the above screenshot of the implant code shared by Cisco Talos we found another method that can be used to fingerprint the presence of the implant.
 
 ```shell
-curl -vk -X POST "https://DEVICEIP/%25"
+curl -k "https://DEVICEIP/%25"
 ```
-Using the `%25`, we meet the conditions specified in the extra location check. This will cause the server to respond with a different HTTP response than it normally would when the implant is not running.
+Using the `%25` (percent encoded percent), we meet the conditions specified in the extra location check. This will cause the server to respond with a different HTTP response than it normally would when the implant is not running.
 A telltale of implant operation is a `<head><title>404 Not Found</title></head>` in the body. An example HTTP body is as such:
 
 ```html
