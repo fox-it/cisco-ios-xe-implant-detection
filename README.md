@@ -14,7 +14,7 @@ Thus, for a lot of devices, the implant is still active, but now only responds i
 
 ## Alternate method for Cisco IOS XE implant scanning
 
-We took another look at the ![initial blogpost by Cisco Talos](https://blog.talosintelligence.com/active-exploitation-of-cisco-ios-xe-software/]) and noticed an extra location check in the implant code:
+We took another look at the [initial blogpost by Cisco Talos](https://blog.talosintelligence.com/active-exploitation-of-cisco-ios-xe-software/]) and noticed an extra location check in the implant code:
 
 ![implant-location-percent](implant-location-percent.png?raw=true "Extra location check")
 
