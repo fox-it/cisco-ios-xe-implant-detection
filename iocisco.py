@@ -25,12 +25,19 @@ except ImportError:
 
 
 def is_compromised(url) -> bool:
+    headers = {
+        "User-Agent": "iocisco.py - https://github.com/fox-it/cisco-ios-xe-implant-detection",
+    }
     s = requests.Session()
-    r = requests.Request(method="GET", url=url)
+    r = requests.Request(method="GET", url=url, headers=headers)
     prep = r.prepare()
     prep.url = url
-    response = s.send(prep, verify=False)
-    return "<h1>404 Not Found</h1>" in response.text
+    try:
+        response = s.send(prep, verify=False)
+        return "<h1>404 Not Found</h1>" in response.text
+    except requests.exceptions.RequestException as e:
+        print(f"    Error: {e}")
+    return False
 
 
 def main():
@@ -42,13 +49,13 @@ def main():
     https_url = f"https://{args.target}/%25"
 
     possible_compromise = False
+    print(f"[!] Checking {http_url}")
     if is_compromised(http_url):
-        print(f"[!] Checking {http_url}")
         print("     WARNING: Possible implant found! Please perform a forensic investigation!")
         possible_compromise = True
 
+    print(f"[!] Checking {https_url}")
     if is_compromised(https_url):
-        print(f"[!] Checking {https_url}")
         print("     WARNING: Possible implant found! Please perform a forensic investigation!")
         possible_compromise = True
 
