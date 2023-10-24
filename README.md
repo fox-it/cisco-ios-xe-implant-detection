@@ -56,6 +56,9 @@ Example usage:
 $ pip3 install requests
 $ python3 iocisco.py 1.1.1.1
 [*] Found no sign of compromise for either http://1.1.1.1/%25 or https://1.1.1.1/%25
+
+# It is also possible to scan a list of hosts, seperated by newlines.
+$ python3 iocisco.py --file cisco-ips.txt
 ```
 
 ## References
