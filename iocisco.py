@@ -40,52 +40,48 @@ def is_compromised(url) -> bool:
     return False
 
 
+def check_target(target: str):
+    http_url = f"http://{target}/%25"
+    https_url = f"https://{target}/%25"
+
+    possible_compromise = False
+    print(f"[!] Checking {http_url}")
+    if is_compromised(http_url):
+        print(f"    WARNING: Possible implant found for {target}! Please perform a forensic investigation!")
+        possible_compromise = True
+
+    print(f"[!] Checking {https_url}")
+    if is_compromised(https_url):
+        print(f"    WARNING: Possible implant found for {target}! Please perform a forensic investigation!")
+        possible_compromise = True
+
+    if not possible_compromise:
+        print(f"[*] Found no sign of compromise for either {http_url} or {https_url}")
+
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-a', action="store", dest="target", help="Cisco IOS XE Device IP or hostname")
-    parser.add_argument('-f', action="store", dest="filename", help="The filename of a file listing IP addresses")
+    parser.add_argument("targets", nargs="*", help="Cisco IOS XE Device IP or hostname")
+    parser.add_argument(
+        "-f",
+        "--file",
+        action="store",
+        dest="filename",
+        help="File containing a list of target hosts (one per line)",
+    )
     args = parser.parse_args()
 
-    if args.target:
-        http_url = f"http://{args.target}/%25"
-        https_url = f"https://{args.target}/%25"
+    if args.targets:
+        for target in args.targets:
+            check_target(target)
 
-        possible_compromise = False
-        print(f"[!] Checking {http_url}")
-        if is_compromised(http_url):
-            print(f"WARNING: Possible implant found for {target}! Please perform a forensic investigation!")
-            possible_compromise = True
-
-        print(f"[!] Checking {https_url}")
-        if is_compromised(https_url):
-            print(f"WARNING: Possible implant found for {target}! Please perform a forensic investigation!")
-            possible_compromise = True
-
-        if not possible_compromise:
-            print(f"[*] Found no sign of compromise for either {http_url} or {https_url}")
-
-    elif args.filename:
-        with open(args.filename) as f:
-            data = f.read()
-            data_ips = data.split("\n")
-
-            for ip in data_ips:
-                http_url = f"http://{ip}/%25"
-                https_url = f"https://{ip}/%25"
-
-                possible_compromise = False
-                #print(f"[!] Checking {http_url}")
-                if is_compromised(http_url):
-                    print(f"WARNING: Possible implant found for {ip}! Please perform a forensic investigation!")
-                    possible_compromise = True
-
-                #print(f"[!] Checking {https_url}")
-                if is_compromised(https_url):
-                    print(f"WARNING: Possible implant found for {ip}! Please perform a forensic investigation!")
-                    possible_compromise = True
-
-                if not possible_compromise:
-                    print(f"[*] Found no sign of compromise for either {http_url} or {https_url}")
+    if args.filename:
+        with open(args.filename, mode="r", encoding="utf-8") as file_handle:
+            for line in file_handle:
+                target = line.strip()
+                if not target or target.startswith("#"):
+                    continue
+                check_target(target)
 
 
 if __name__ == "__main__":

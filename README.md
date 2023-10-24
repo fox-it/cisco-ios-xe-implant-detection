@@ -54,13 +54,11 @@ Example usage:
 
 ```shell
 $ pip3 install requests
-
-#Scanning for single IP
-$ python3 iocisco.py -a 1.1.1.1
+$ python3 iocisco.py 1.1.1.1
 [*] Found no sign of compromise for either http://1.1.1.1/%25 or https://1.1.1.1/%25
 
-#Scanning multiple IP Addresses. Ensure the IP Addresses are separated by new line.
-$ python3 iocisco.py -f ips.txt
+# It is also possible to scan a list of hosts, seperated by newlines.
+$ python3 iocisco.py --file cisco-ips.txt
 ```
 
 ## References
