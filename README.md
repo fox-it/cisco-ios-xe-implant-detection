@@ -1,11 +1,11 @@
 ## Cisco IOS XE implant scanning
-This repository contains information regarding post-exploitation activities linked to the Cisco IOS XE Software Web Management User Interface mass exploitations. Cisco Talos [1] published a fingerprint that could check if the implant was active on Cisco IOS XE devices. For reference:
+This repository contains information regarding post-exploitation activities linked to the Cisco IOS XE Software Web Management User Interface mass exploitations. Cisco Talos [^1] published a fingerprint that could check if the implant was active on Cisco IOS XE devices. For reference:
 
 ```shell
 curl -k -X POST "https://DEVICEIP/webui/logoutconfirm.html?logon_hash=1" 
 ```
 
-If the HTTP response consists of a hexadecimal string, this is a high-confidence indicator that the device is compromised. However, as multiple sources have mentioned [2,3], the number of implants that can be discovered using this method has gone down significantly.
+If the HTTP response consists of a hexadecimal string, this is a high-confidence indicator that the device is compromised. However, as multiple sources have mentioned [^2] [^3], the number of implants that can be discovered using this method has gone down significantly.
 
 ## Upgraded Implant
 
@@ -70,8 +70,6 @@ $ python3 iocisco.py --file cisco-ips.txt
 
 ## References
 
-```
-[1]: https://blog.talosintelligence.com/active-exploitation-of-cisco-ios-xe-software/
-[2]: https://www.bleepingcomputer.com/news/security/number-of-hacked-cisco-ios-xe-devices-plummets-from-50k-to-hundreds/
-[3]: https://twitter.com/onyphe/status/1715633541264900217
-```
+[^1]: https://blog.talosintelligence.com/active-exploitation-of-cisco-ios-xe-software/
+[^2]: https://www.bleepingcomputer.com/news/security/number-of-hacked-cisco-ios-xe-devices-plummets-from-50k-to-hundreds/
+[^3]: https://twitter.com/onyphe/status/1715633541264900217
