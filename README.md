@@ -54,10 +54,17 @@ Example usage:
 
 ```shell
 $ pip3 install requests
-$ python3 iocisco.py 1.1.1.1
-[*] Found no sign of compromise for either http://1.1.1.1/%25 or https://1.1.1.1/%25
 
-# It is also possible to scan a list of hosts, seperated by newlines.
+$ python3 iocisco.py 192.168.1.1
+[!] Checking http://192.168.1.1/%25
+    WARNING: Possible implant found for 192.168.1.1! Please perform a forensic investigation!
+[!] Checking https://192.168.1.1/%25
+    WARNING: Possible implant found for 192.168.1.1! Please perform a forensic investigation!
+```
+
+It is also possible to scan a list of hosts, seperated by newlines.
+
+```shell
 $ python3 iocisco.py --file cisco-ips.txt
 ```
 

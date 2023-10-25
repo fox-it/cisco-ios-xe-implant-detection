@@ -24,7 +24,7 @@ except ImportError:
     raise ImportError(f"Could not find requests. Please run `pip install requests`.")
 
 
-def is_compromised(url) -> bool:
+def is_compromised(url: str, timeout: int = 10) -> bool:
     headers = {
         "User-Agent": "iocisco.py - https://github.com/fox-it/cisco-ios-xe-implant-detection",
     }
@@ -33,7 +33,7 @@ def is_compromised(url) -> bool:
     prep = r.prepare()
     prep.url = url
     try:
-        response = s.send(prep, verify=False)
+        response = s.send(prep, verify=False, timeout=timeout)
         return "<h1>404 Not Found</h1>" in response.text
     except requests.exceptions.RequestException as e:
         print(f"    Error: {e}")
@@ -45,31 +45,34 @@ def check_target(target: str):
     https_url = f"https://{target}/%25"
 
     possible_compromise = False
-    print(f"[!] Checking {http_url}")
-    if is_compromised(http_url):
-        print(f"    WARNING: Possible implant found for {target}! Please perform a forensic investigation!")
-        possible_compromise = True
-
-    print(f"[!] Checking {https_url}")
-    if is_compromised(https_url):
-        print(f"    WARNING: Possible implant found for {target}! Please perform a forensic investigation!")
-        possible_compromise = True
+    for url in [http_url, https_url]:
+        print(f"[!] Checking {url}")
+        if is_compromised(url):
+            print(f"    WARNING: Possible implant found for {target}! Please perform a forensic investigation!")
+            possible_compromise = True
 
     if not possible_compromise:
         print(f"[*] Found no sign of compromise for either {http_url} or {https_url}")
 
 
 def main():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        description="Scan Cisco IOS XE device(s) to determine if implant is present.",
+    )
     parser.add_argument("targets", nargs="*", help="Cisco IOS XE Device IP or hostname")
+    parser.add_argument("-t", "--timeout", type=int, default=10, help="timeout for HTTP requests")
     parser.add_argument(
         "-f",
         "--file",
         action="store",
         dest="filename",
-        help="File containing a list of target hosts (one per line)",
+        help="file containing a list of target hosts (one per line)",
     )
     args = parser.parse_args()
+    if not args.targets and not args.filename:
+        parser.print_help()
+        return 1
 
     if args.targets:
         for target in args.targets:
