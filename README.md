@@ -4,7 +4,7 @@ Network detection of `CVE-2023-20198` exploitation and fingerprinting of post-ex
 ## CVE-2023-20198 Suricata network detection
 The [suricata/](suricata/) folder contains Suricata detection rules for exploitation of `CVE-2023-20198`. These rules monitor for a percent-encoded-percent which can be used to bypass authentication on Cisco IOS XE devices not patched for `CVE-2023-20198`.
 
-This directory also contains a reference PCAPs based on observed in-the-wild exploitation traffic:
+This directory also contains reference PCAPs based on observed in-the-wild exploitation traffic:
 
 * [fox-it-cisco-cve-2023-20198-auth-bypass-wsma-exec.pcap](suricata/fox-it-cisco-cve-2023-20198-auth-bypass-wsma-exec.pcap?raw=true) -- CVE-2019-20198 exploit with wsma-exec
 * [fox-it-cisco-cve-2023-20198-auth-bypass-wsma-config.pcap](suricata/fox-it-cisco-cve-2023-20198-auth-bypass-wsma-config.pcap?raw=true) -- CVE-2019-20198 exploit with wsma-config
