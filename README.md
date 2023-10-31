@@ -2,7 +2,12 @@
 Network detection of `CVE-2023-20198` exploitation and fingerprinting of post-exploitation of Cisco IOS XE devices.
 
 ## CVE-2023-20198 Suricata network detection
-The [suricata/](suricata/) folder contains Suricata detection rules for exploitation of `CVE-2023-20198`. These rules monitor for a percent-encoded-percent which can be used to bypass authentication on Cisco IOS XE devices not patched for `CVE-2023-20198`. This directory also contains a reference PCAP based on observed in-the-wild exploitation traffic.
+The [suricata/](suricata/) folder contains Suricata detection rules for exploitation of `CVE-2023-20198`. These rules monitor for a percent-encoded-percent which can be used to bypass authentication on Cisco IOS XE devices not patched for `CVE-2023-20198`.
+
+This directory also contains reference PCAPs based on observed in-the-wild exploitation traffic:
+
+* [fox-it-cisco-cve-2023-20198-auth-bypass-wsma-exec.pcap](suricata/fox-it-cisco-cve-2023-20198-auth-bypass-wsma-exec.pcap?raw=true) -- CVE-2019-20198 exploit with wsma-exec
+* [fox-it-cisco-cve-2023-20198-auth-bypass-wsma-config.pcap](suricata/fox-it-cisco-cve-2023-20198-auth-bypass-wsma-config.pcap?raw=true) -- CVE-2019-20198 exploit with wsma-config
 
 ## Cisco IOS XE implant scanning
 This repository also contains information regarding post-exploitation activities linked to the Cisco IOS XE Software Web Management User Interface mass exploitations. Cisco Talos [^1] published a fingerprint that could check if the implant was active on Cisco IOS XE devices. For reference:
