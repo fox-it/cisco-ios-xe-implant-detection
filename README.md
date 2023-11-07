@@ -35,6 +35,10 @@ Based on the above screenshot of the implant code shared by Cisco Talos we found
 curl -k "https://DEVICEIP/%25"
 ```
 Using the `%25` (percent encoded percent), we meet the conditions specified in the extra location check. This will cause the server to respond with a different HTTP response than it normally would when the implant is not running.
+
+There are currently three known versions of the implant. As of 1 November 2023, the implant is named `BadCandy` by Cisco Talos [^1].
+
+### BadCandy Implant v1 / v2 response
 A telltale of implant operation is a `<head><title>404 Not Found</title></head>` in the body. An example HTTP body is as such:
 
 ```html
@@ -48,6 +52,26 @@ $ curl -k 'https://DEVICEIP/%25'
 </html>
 ```
 
+### BadCandy Implant v3 response
+The third variant returns the login page rather than the 404. As one would still normally expect a javascript redirect rather than this login page, we can still determine the presence of the implant by checking whether or not a login page is returned:
+
+```html
+curl -k 'https://DEVICEIP/%25'
+<!DOCTYPE html>
+<html>
+        <!--
+        Copyright (c) 2015-2019 by Cisco Systems, Inc.
+        All rights reserved.
+        -->
+        <head lang="en">
+                <meta charset="UTF-8">
+                <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                <title id="loginTitle"></title>
+```
+
+We found different login responses in our scanning results, and ended up with the `name="Username"` string as an identifier to determine whether or not a login page is being returned.
+
+###  Other responses
 If the implant is not present, you will get a different response. For example:
 
 ```html
@@ -68,9 +92,9 @@ $ pip3 install requests
 
 $ python3 iocisco.py 192.168.1.1
 [!] Checking http://192.168.1.1/%25
-    WARNING: Possible implant found for 192.168.1.1! Please perform a forensic investigation!
+    WARNING: Possible implant found for 192.168.1.1 (impant v3)! Please perform a forensic investigation!
 [!] Checking https://192.168.1.1/%25
-    WARNING: Possible implant found for 192.168.1.1! Please perform a forensic investigation!
+    WARNING: Possible implant found for 192.168.1.1 (implant v3)! Please perform a forensic investigation!
 ```
 
 It is also possible to scan a list of hosts, seperated by newlines.

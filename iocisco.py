@@ -24,7 +24,11 @@ except ImportError:
     raise ImportError(f"Could not find requests. Please run `pip install requests`.")
 
 
-def is_compromised(url: str, timeout: int = 10) -> bool:
+IMPLANT_V1_V2_RESPONSE = "<h1>404 Not Found</h1>"
+IMPLANT_V3_RESPONSE = 'name="Username"'
+
+
+def determine_compromise(url: str, timeout: int = 10) -> str:
     headers = {
         "User-Agent": "iocisco.py - https://github.com/fox-it/cisco-ios-xe-implant-detection",
     }
@@ -34,24 +38,37 @@ def is_compromised(url: str, timeout: int = 10) -> bool:
     prep.url = url
     try:
         response = s.send(prep, verify=False, timeout=timeout)
-        return "<h1>404 Not Found</h1>" in response.text
+        if IMPLANT_V1_V2_RESPONSE in response.text:
+            # Version 1 / 2 return a 404 with an html body, unlike normal Cisco IOS XE for this URL
+            return "v1/v2"
+        elif IMPLANT_V3_RESPONSE in response.text:
+            # Version 3 returns the login page, instead of a javascript redirect
+            return "v3"
+        return False
     except requests.exceptions.RequestException as e:
         print(f"    Error: {e}")
-    return False
+    return None
 
 
 def check_target(target: str):
     http_url = f"http://{target}/%25"
     https_url = f"https://{target}/%25"
 
-    possible_compromise = False
+    checked_urls_without_compromise = 0
     for url in [http_url, https_url]:
         print(f"[!] Checking {url}")
-        if is_compromised(url):
-            print(f"    WARNING: Possible implant found for {target}! Please perform a forensic investigation!")
+        verdict = determine_compromise(url)
+        if verdict:
+            print(
+                f"    WARNING: Possible implant found for {target} (implant {verdict})! Please perform a forensic investigation!"
+            )
             possible_compromise = True
+        elif verdict is None:
+            print(f"[!] Could not determine status of {url}")
+        else:
+            checked_urls_without_compromise += 1
 
-    if not possible_compromise:
+    if checked_urls_without_compromise == 2:
         print(f"[*] Found no sign of compromise for either {http_url} or {https_url}")
 
 
