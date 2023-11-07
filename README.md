@@ -36,9 +36,9 @@ curl -k "https://DEVICEIP/%25"
 ```
 Using the `%25` (percent encoded percent), we meet the conditions specified in the extra location check. This will cause the server to respond with a different HTTP response than it normally would when the implant is not running.
 
-There are currently three known versions of the implant. 
+There are currently three known versions of the implant. As of 1 November 2023, the implant is named `BadCandy` by Cisco Talos [^1].
 
-### V1 / V2 response
+### BadCandy Implant v1 / v2 response
 A telltale of implant operation is a `<head><title>404 Not Found</title></head>` in the body. An example HTTP body is as such:
 
 ```html
@@ -52,7 +52,7 @@ $ curl -k 'https://DEVICEIP/%25'
 </html>
 ```
 
-### V3 reponse
+### BadCandy Implant v3 response
 The third variant returns the login page rather than the 404. As one would still normally expect a javascript redirect rather than this login page, we can still determine the presence of the implant by checking whether or not a login page is returned:
 
 ```html
