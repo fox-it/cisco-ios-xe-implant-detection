@@ -1,0 +1,11 @@
+services:
+  openresty:
+    image: openresty/openresty:alpine
+    restart: always
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+        #- ./implant_v1.conf:/usr/binos/conf/nginx-conf/cisco_service.conf
+      - ./implant_v2.conf:/usr/binos/conf/nginx-conf/cisco_service.conf
+    ports:
+      - "8080:80"
+
